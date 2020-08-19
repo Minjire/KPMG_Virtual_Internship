@@ -1,5 +1,7 @@
 # %%
 import pandas as pd
+import numpy as np
+import datetime
 
 # %% Load Data
 path = 'KPMG_VI_New_raw_data_update_final.xlsx'
@@ -47,14 +49,31 @@ df_final_transc.total_number_of_products = df_final_transc.total_number_of_produ
 print(f"\n {df_final_transc.head()}")
 star = '*'
 print('\n')
-print(85*star)
+print(85 * star)
 # add average list_price and average standard_cost
-df_final_transc['av_list_price'] = round(df_final_transc.total_list_price/df_final_transc.total_number_of_products, 2)
-df_final_transc['av_standard_cost'] = round(df_final_transc.total_standard_cost/df_final_transc.total_number_of_products, 2)
+df_final_transc['av_list_price'] = round(df_final_transc.total_list_price / df_final_transc.total_number_of_products, 2)
+df_final_transc['av_standard_cost'] = round(
+    df_final_transc.total_standard_cost / df_final_transc.total_number_of_products, 2)
 print(f"\n {df_final_transc[:10]}")
 
 # %%
-df_rel_cust_demg = df_cust_demg.drop(['first_name', 'last_name', 'default'], axis=1)
-print(df_rel_cust_demg.head())
-print(df_rel_cust_demg.columns)
+df_final_cust_demg = df_cust_demg.drop(['first_name', 'last_name', 'default'], axis=1)
+print(df_final_cust_demg.head())
+print(df_final_cust_demg.columns)
+
+df_final_cust_addr = df_cust_addr.drop(['address', 'country'], axis=1)
+print(df_final_cust_addr.head())
+print(df_final_cust_addr.columns)
+
+# %% Merge Dataframes
+frames = [df_final_cust_addr.set_index('customer_id'), df_final_cust_demg.set_index('customer_id'),
+          df_final_transc.set_index('customer_id')]
+
+df_fin = pd.concat(frames, axis=1).reset_index()
+
+print(df_fin.head())
+print(df_fin.columns)
+print(len(df_fin.index))
+
+
 
