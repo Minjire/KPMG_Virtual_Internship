@@ -116,19 +116,16 @@ plt.show()
 
 # %%
 dfgp = df_fin.groupby('state')
-
-df_state = pd.DataFrame(columns=['state', 'total_number_of_products', 'past_3yrs_total_purchases'])
-
+dict = {'NSW': 'New South Wales', 'VIC': 'Victoria', 'QLD': 'Queensland'}
 for name, group in dfgp:
-    prod = dfgp.get_group(name).total_number_of_products.sum()
-    past = dfgp.get_group(name).past_3_years_bike_related_purchases.sum()
-    df_state = df_state.append({'state': name, 'total_number_of_products': prod, 'past_3yrs_total_purchases': past},
-                               ignore_index=True)
+    plt.bar(name, dfgp.get_group(name).past_3_years_bike_related_purchases.sum(), label=dict[name], align='center')
 
-df_state.plot(kind='bar', x='state', y=['past_3yrs_total_purchases'], title='State Statistics', color='purple')
 plt.xlabel('State')
 plt.ylabel('Past 3 Years Bike Related Purchases')
 plt.savefig('State Statistics.png', bbox_inches='tight')
+plt.title('State Statistics')
+plt.legend()
 plt.show()
 
+# %%
 
