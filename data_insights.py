@@ -84,7 +84,7 @@ df_fin['age'] = df_fin['DOB'].apply(lambda x: from_dob_to_age(x))
 print(df_fin.head())
 print(df_fin.columns)
 print(len(df_fin.index))
-# df_fin.to_csv('Docs/final_df.csv', index=False)
+df_fin.to_csv('Docs/final_df.csv', index=False)
 
 # %% Data Distribution
 # standardize values in gender and state columns
@@ -101,11 +101,34 @@ print(df_fin.gender.unique())
 # drop age that is greater than 150
 df_fin = df_fin[df_fin.age < 150]
 count, bin_edges = np.histogram(df_fin['age'])
-df_fin['age'].plot(kind='hist', figsize=(8, 5), xticks=bin_edges)
+df_fin['age'].plot(kind='hist', xticks=bin_edges)
 
 plt.title("Customers' Age")
 plt.xlabel('Age')
 plt.ylabel('Number of Customers')
 plt.savefig('Customer Age.png', bbox_inches='tight')
 plt.show()
+
+# %%
+df_fin['gender'].value_counts().plot(kind='pie', title='Customer Gender', autopct='%1.2f%%')
+plt.savefig('Customer Gender.png', bbox_inches='tight')
+plt.show()
+
+# %%
+dfgp = df_fin.groupby('state')
+
+df_state = pd.DataFrame(columns=['state', 'total_number_of_products', 'past_3yrs_total_purchases'])
+
+for name, group in dfgp:
+    prod = dfgp.get_group(name).total_number_of_products.sum()
+    past = dfgp.get_group(name).past_3_years_bike_related_purchases.sum()
+    df_state = df_state.append({'state': name, 'total_number_of_products': prod, 'past_3yrs_total_purchases': past},
+                               ignore_index=True)
+
+df_state.plot(kind='bar', x='state', y=['past_3yrs_total_purchases'], title='State Statistics', color='purple')
+plt.xlabel('State')
+plt.ylabel('Past 3 Years Bike Related Purchases')
+plt.savefig('State Statistics.png', bbox_inches='tight')
+plt.show()
+
 
