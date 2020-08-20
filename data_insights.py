@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import datetime
+import matplotlib.pyplot as plt
 
 # %% Load Data
 path = 'KPMG_VI_New_raw_data_update_final.xlsx'
@@ -71,9 +72,40 @@ frames = [df_final_cust_addr.set_index('customer_id'), df_final_cust_demg.set_in
 
 df_fin = pd.concat(frames, axis=1).reset_index()
 
+
+# add age column
+def from_dob_to_age(born):
+    today = datetime.date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+
+
+df_fin['age'] = df_fin['DOB'].apply(lambda x: from_dob_to_age(x))
+
 print(df_fin.head())
 print(df_fin.columns)
 print(len(df_fin.index))
+# df_fin.to_csv('Docs/final_df.csv', index=False)
 
+# %% Data Distribution
+# standardize values in gender and state columns
+df_fin.state = df_fin.state.str.replace('New South Wales', 'NSW')
+df_fin.state = df_fin.state.str.replace('Victoria', 'VIC')
+df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('F', 'Female') if x == 'F' else x)
+df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('Femal', 'Female') if x == 'Femal' else x)
+df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('M', 'Male') if x == 'M' else x)
 
+print(df_fin.state.unique())
+print(df_fin.gender.unique())
+
+# %% Visualization
+# drop age that is greater than 150
+df_fin = df_fin[df_fin.age < 150]
+count, bin_edges = np.histogram(df_fin['age'])
+df_fin['age'].plot(kind='hist', figsize=(8, 5), xticks=bin_edges)
+
+plt.title("Customers' Age")
+plt.xlabel('Age')
+plt.ylabel('Number of Customers')
+plt.savefig('Customer Age.png', bbox_inches='tight')
+plt.show()
 
