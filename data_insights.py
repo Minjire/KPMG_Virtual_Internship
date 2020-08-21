@@ -122,9 +122,9 @@ for name, group in dfgp:
 
 plt.xlabel('State')
 plt.ylabel('Past 3 Years Bike Related Purchases')
-plt.savefig('State Statistics.png', bbox_inches='tight')
 plt.title('State Statistics')
 plt.legend()
+plt.savefig('State Statistics.png', bbox_inches='tight')
 plt.show()
 
 # %%
