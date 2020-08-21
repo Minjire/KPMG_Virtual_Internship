@@ -147,6 +147,5 @@ cython_debug/
 .idea/modules.xml
 KPMG_VI_New_raw_data_update_final.xlsx
 kpmgvenv/
-~$ta Quality.docx
-~$KPMG_VI_New_raw_data_update_final.xlsx
-final_df.csv
+Docs/final_df.csv
+**~$*
