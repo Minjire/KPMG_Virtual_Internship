@@ -84,18 +84,19 @@ df_fin['age'] = df_fin['DOB'].apply(lambda x: from_dob_to_age(x))
 print(df_fin.head())
 print(df_fin.columns)
 print(len(df_fin.index))
-df_fin.to_csv('Docs/final_df.csv', index=False)
 
 # %% Data Distribution
 # standardize values in gender and state columns
-df_fin.state = df_fin.state.str.replace('New South Wales', 'NSW')
-df_fin.state = df_fin.state.str.replace('Victoria', 'VIC')
+df_fin.state = df_fin.state.str.replace('NSW', 'New South Wales')
+df_fin.state = df_fin.state.str.replace('VIC', 'Victoria')
+df_fin.state = df_fin.state.str.replace('QLD', 'Queensland')
 df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('F', 'Female') if x == 'F' else x)
 df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('Femal', 'Female') if x == 'Femal' else x)
 df_fin.gender = df_fin.gender.apply(lambda x: str(x).replace('M', 'Male') if x == 'M' else x)
 
 print(df_fin.state.unique())
 print(df_fin.gender.unique())
+df_fin.to_csv('Docs/final_df.csv', index=False)
 
 # %% Visualization
 # drop age that is greater than 150
@@ -116,9 +117,9 @@ plt.show()
 
 # %%
 dfgp = df_fin.groupby('state')
-dict = {'NSW': 'New South Wales', 'VIC': 'Victoria', 'QLD': 'Queensland'}
+# dict = {'NSW': 'New South Wales', 'VIC': 'Victoria', 'QLD': 'Queensland'}
 for name, group in dfgp:
-    plt.bar(name, dfgp.get_group(name).past_3_years_bike_related_purchases.sum(), label=dict[name], align='center')
+    plt.bar(name, dfgp.get_group(name).past_3_years_bike_related_purchases.sum(), label=name, align='center')
 
 plt.xlabel('State')
 plt.ylabel('Past 3 Years Bike Related Purchases')
@@ -128,4 +129,3 @@ plt.savefig('State Statistics.png', bbox_inches='tight')
 plt.show()
 
 # %%
-
